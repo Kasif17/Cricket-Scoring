@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createMatch, addBall } = require('../controllers/matchController');
+const { updateScore, createMatch } = require('../controllers/matchController');
+
 
 router.post('/create', createMatch);
-router.post('/ball', addBall);
+router.post('/update', updateScore);
 
 module.exports = router;

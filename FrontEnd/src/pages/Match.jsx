@@ -1,5 +1,5 @@
 import React from 'react';
-import Scorecard from '../components/Scorecard';
+import Scorecard from '../components/Scoreboard';
 
 const Match = () => {
   const matchId = localStorage.getItem('matchId'); // Simulate login or match start
