@@ -21,7 +21,7 @@ export default function ButtonGrid({ matchId }) {
 
   return (
     <div className="grid grid-cols-4 gap-2">
-      {/* Runs */}
+     
       {[0, 1, 2, 3, 4, 6].map((run) => (
         <button
           key={run}
@@ -32,7 +32,7 @@ export default function ButtonGrid({ matchId }) {
         </button>
       ))}
 
-      {/* Extras */}
+ 
       <button
         onClick={() => handleScore({ wide: true, runs: 1 })}
         className="bg-yellow-400 text-white p-2 rounded"
@@ -58,7 +58,7 @@ export default function ButtonGrid({ matchId }) {
         Leg Bye +1
       </button>
 
-      {/* Wicket */}
+
       <button
         onClick={() => handleScore({ wicket: true })}
         className="bg-red-600 text-white p-2 rounded col-span-2"

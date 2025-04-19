@@ -19,7 +19,6 @@ const updateScore = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Match not found' });
     }
 
-    // ✅ FETCH PLAYERS BY ID
     const striker = await Player.findById(match.striker);
     const nonStriker = await Player.findById(match.nonStriker);
     const bowler = await Player.findById(match.bowler);
@@ -73,17 +72,12 @@ const updateScore = async (req, res) => {
       commentary = `${runs} run(s)`;
     }
 
-    // Count legitimate delivery
-
-// Count legitimate delivery
 if (!wide && !noball) {
     match.balls += 1;
     bowler.balls += 1;
   
-    // Calculate current over number (e.g., 1.2)
     const currentOver = `${match.overs}.${match.balls}`;
   
-    // Update bowler's overs
     const fullOvers = Math.floor(bowler.balls / 6);
     const remainingBalls = bowler.balls % 6;
     bowler.overs = parseFloat(`${fullOvers}.${remainingBalls}`);
@@ -92,62 +86,42 @@ if (!wide && !noball) {
       match.overs += 1;
       match.balls = 0;
   
-      // ✅ CHANGE STRIKE AT END OF OVER
       const temp = match.striker;
       match.striker = match.nonStriker;
       match.nonStriker = temp;
     }
   
-    // Add rich commentary line
+  
     const detailedCommentary = `${currentOver} ${bowler.name} to ${striker.name}, ${runs} run(s)`;
     match.commentary.push(detailedCommentary);
   } else {
-    // Even if it's not a legitimate ball, we can still add a rich commentary
+    
     const currentOver = `${match.overs}.${match.balls}`;
     const event = wide ? 'Wide' : noball ? 'No Ball' : bye ? 'Bye' : legbye ? 'Leg Bye' : 'Delivery';
     const detailedCommentary = `${currentOver} ${bowler.name} to ${striker.name}, ${event} + ${runs}`;
     match.commentary.push(detailedCommentary);
   }
-  
-    // if (!wide && !noball) {
-    //   match.balls += 1;
-    //   if (match.balls === 6) {
-    //     match.overs += 1;
-    //     match.balls = 0;
 
-    //     // ✅ CHANGE STRIKE AT END OF OVER
-    //     const temp = match.striker;
-    //     match.striker = match.nonStriker;
-    //     match.nonStriker = temp;
-    //   }
-    // }
 
-    // ✅ CHANGE STRIKE ON ODD RUNS
+
     if (runs % 2 === 1 && !bye && !legbye && !wide) {
       const temp = match.striker;
       match.striker = match.nonStriker;
       match.nonStriker = temp;
     }
 
-//     const overBall = `${match.overs}.${match.balls}`;
-//    const formatted = `${overBall} ${bowler.name} to ${striker.name}, ${commentary}`;
-//   match.commentary.push(formatted);
 
-
-    // ✅ SAVE ALL CHANGES
     await striker.save();
     await nonStriker.save();
     await bowler.save();
     await match.save();
 
-    // ✅ FETCH MATCH AGAIN WITH POPULATED PLAYERS FOR FRONTEND (NEW)
     const populatedMatch = await Match.findById(match._id)
       .populate('striker')
       .populate('nonStriker')
       .populate('bowler');
 
-    // ✅ SEND UPDATED MATCH WITH PLAYER NAMES
-    req.io.emit('scoreUpdate', populatedMatch); // Real-time socket update
+    req.io.emit('scoreUpdate', populatedMatch); 
 
     res.json({ success: true, match: populatedMatch });
   } catch (err) {
@@ -191,6 +165,64 @@ const createMatch = async (req, res) => {
   }
 };
 
-module.exports = { updateScore, createMatch };
+const createBatsman = async (req, res) => {
+    try {
+      const { matchId, name } = req.body;
+  
+      if (!matchId || !name) {
+        return res.status(400).json({ success: false, message: "matchId and name are required." });
+      }
+  
+      const match = await Match.findById(matchId);
+      if (!match) {
+        return res.status(404).json({ success: false, message: "Match not found." });
+      }
+  
+      const player = new Player({ name });
+      await player.save();
+  
+      
+      match.striker = player._id; 
+      await match.save();
+  
+      res.status(201).json({ success: true, player });
+    } catch (error) {
+      console.error("Error in createBatsman:", error);
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  };
+  
+
+  const createBowler = async (req, res) => {
+    try {
+      const { matchId, name } = req.body;
+  
+    
+      if (!matchId || !name) {
+        return res.status(400).json({ success: false, message: "matchId and name are required." });
+      }
+  
+      const match = await Match.findById(matchId);
+      if (!match) {
+        return res.status(404).json({ success: false, message: "Match not found." });
+      }
+  
+   
+      const player = new Player({ name, role: 'bowler' }); 
+      await player.save();
+  
+     
+      match.bowler = player._id; 
+      await match.save();
+  
+      
+      res.status(201).json({ success: true, player });
+    } catch (error) {
+      console.error("Error in createBowler:", error);
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  };
+  
+module.exports = { updateScore, createMatch ,createBatsman, createBowler };
 
 

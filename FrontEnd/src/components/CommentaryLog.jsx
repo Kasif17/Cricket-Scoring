@@ -6,7 +6,7 @@ export default function CommentaryLog() {
 
   useEffect(() => {
     socket.on("scoreUpdate", (match) => {
-      setCommentary([...match.commentary].reverse()); // latest first
+      setCommentary([...match.commentary].reverse()); 
     });
 
     return () => socket.off("scoreUpdate");
