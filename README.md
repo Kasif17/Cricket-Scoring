@@ -102,9 +102,9 @@ Frontend will be available at: `http://localhost:5173`
 ## 📸 Screenshots
 
 ### 💻 Desktop View
-![Desktop UI](./output%20result.jpg)
+![Desktop UI](./output-result.jpg)
 
-> More mobile views coming soon.
+
 
 ---
 
