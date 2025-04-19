@@ -13,7 +13,7 @@ export default function App() {
   return (
     <div className="p-4 bg-gray-100 min-h-screen font-sans">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Match Commentary</h1>
+        <h1 className="text-2xl font-bold">Match ScoreCard</h1>
       </div>
 
       <PlayerSelectors
