@@ -70,28 +70,3 @@ export default function PlayerSelectors({
     </div>
   );
 }
-
-
-// import React from "react";
-
-// const InputBox = ({ label, value, onChange }) => (
-//   <div className="mr-4">
-//     <label className="block text-sm font-medium">{label}</label>
-//     <input
-//       className="border p-2 rounded"
-//       value={value}
-//       onChange={(e) => onChange(e.target.value)}
-//       placeholder={`Enter ${label}`}
-//     />
-//   </div>
-// );
-
-// export default function PlayerSelectors({ striker, setStriker, nonStriker, setNonStriker, bowler, setBowler }) {
-//   return (
-//     <div className="flex mt-4">
-//       <InputBox label="Batsman (Striker)" value={striker} onChange={setStriker} />
-//       <InputBox label="Batsman (Non Striker)" value={nonStriker} onChange={setNonStriker} />
-//       <InputBox label="Bowler" value={bowler} onChange={setBowler} />
-//     </div>
-//   );
-// }
